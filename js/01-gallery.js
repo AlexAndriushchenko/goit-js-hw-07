@@ -2,10 +2,10 @@ import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
 const galeryContainer = document.querySelector(".gallery");
-const galeryMarkUp = createGaleryItems(galleryItems);
-
-galeryContainer.insertAdjacentHTML("beforeend", galeryMarkUp);
-
+galeryContainer.insertAdjacentHTML(
+  "beforeend",
+  createGaleryItems(galleryItems)
+);
 galeryContainer.addEventListener("click", onGaleryItemClick);
 
 function createGaleryItems(galleryItems) {
@@ -31,19 +31,16 @@ function onGaleryItemClick(evt) {
   }
 
   const currentImageURl = evt.target.dataset.source;
-
   const instance = basicLightbox.create(
-    `<img class="modal__image" scr="assets/images/image.png" width="800" height="600">`
+    `<img src="${currentImageURl}" width="800" height="600">`,
+    {
+      onShow: (instance) => window.addEventListener("keydown", onEscPress),
+      onClose: (instance) => window.removeEventListener("keydown", onEscPress),
+    }
   );
-
   instance.show();
 
-  const modalEL = document.querySelector(".modal__image");
-  modalEL.src = currentImageURl;
-
-  window.addEventListener("keydown", modalClose);
-
-  function modalClose(event) {
+  function onEscPress(event) {
     if (!basicLightbox.visible()) {
       return;
     }
